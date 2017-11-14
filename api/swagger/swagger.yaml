@@ -4,9 +4,11 @@ info:
   title: TAMUHack-AA
 # basePath prefixes all resource paths
 basePath: /
-#
+# Uncomment for local dev:
+# host: localhost:3030
 schemes:
-  # tip: remove http to make production-grade
+  # Uncomment for local dev:
+  # - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -41,12 +43,22 @@ paths:
     get:
       description: Returns a flight matching the specified flight number
       operationId: flight
+      parameters:
+          - name: flightNumber
+            in: query
+            description: "Flight number for the desired flight"
+            required: true
+            type: string
       responses:
         "200":
           description: Success
           schema:
             # a pointer to a definition
             $ref: "#/definitions/FlightSegment"
+        "500":
+            description: Flight not found
+            schema:
+              type: string
   /flights:
     x-swagger-router-controller: flight
     get:
