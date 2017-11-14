@@ -1,5 +1,6 @@
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 # TAMUHack-AA
-A simple backend to help you get up and running with mock data for flight data, travel info, reservations to help you get hacking on the next big thing for AmericanAirlines
+A simple backend to help you get up and running with mock data for flight data, travel info, and reservations to help you get hacking on the next big thing for AmericanAirlines
 
 ## Getting Started
 1. Run `npm install` to download all project devDependencies

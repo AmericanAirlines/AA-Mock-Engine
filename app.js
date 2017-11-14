@@ -6,7 +6,7 @@ const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUI      = require('swagger-tools/middleware/swagger-ui');
-const _ = require("lodash");
+const _              = require("lodash");
 
 const app            = express();
 const port = process.env.PORT || 8080;
