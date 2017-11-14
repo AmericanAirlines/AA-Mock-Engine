@@ -24,6 +24,7 @@
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
     "swagger": "^0.7.5",
+    "swagger-editor": "^3.1.15",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {

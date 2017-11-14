@@ -18,43 +18,86 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+  /reservation:
+    x-swagger-router-controller: reservation
     get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
+      description: Returns a reservation matching the specified record locator
+      operationId: reservation
       parameters:
-        - name: name
+        - name: recordLocator
           in: query
-          description: The name of the person to whom to say hello
-          required: false
+          description: "6 character string for the desired reservation"
+          required: true
           type: string
       responses:
         "200":
           description: Success
           schema:
             # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
+            $ref: "#/definitions/ReservationResponse"
+        "500":
+            description: Reservation not found
+            schema:
+              type: string
+  /flight:
+    x-swagger-router-controller: flight
+    get:
+      description: Returns a flight matching the specified flight number
+      operationId: flight
+      responses:
+        "200":
+          description: Success
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            # a pointer to a definition
+            $ref: "#/definitions/FlightSegment"
+  /flights:
+    x-swagger-router-controller: flight
+    get:
+      operationId: flights
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            type: array
+            items: 
+              $ref: "#/definitions/FlightSegment"
   /docs:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
+  ReservationResponse:
     required:
-      - message
+      - recordLocator
     properties:
-      message:
+      firstName:
         type: string
-  ErrorResponse:
-    required:
-      - message
+      lastName:
+        type: string
+      recordLocator:
+        type: string        
+      flights:
+        type: array
+        items:
+          $ref: "#/definitions/FlightSegment"
+  FlightSegment:
     properties:
-      message:
+      flightNumber: 
         type: string
+      originCode: 
+        type: string
+      originCity:
+        type: string
+      destinationCode:
+        type: string
+      destinationCity:
+        type: string
+      estimatedDeparture:
+        type: string
+      scheduledDeparture:
+        type: string
+      estimatedArrival:
+        type: string
+      scheduledArrival:
+        type: string
+        
