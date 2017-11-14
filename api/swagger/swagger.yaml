@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: TAMUHack-AA
 # during dev, should point to your local machine
-host: localhost:3030
+# host: localhost:3030
 # basePath prefixes all resource paths
 basePath: /
 #
@@ -60,7 +60,7 @@ paths:
           schema:
             # a pointer to a definition
             type: array
-            items: 
+            items:
               $ref: "#/definitions/FlightSegment"
   /docs:
     x-swagger-pipe: swagger_raw
@@ -75,16 +75,16 @@ definitions:
       lastName:
         type: string
       recordLocator:
-        type: string        
+        type: string
       flights:
         type: array
         items:
           $ref: "#/definitions/FlightSegment"
   FlightSegment:
     properties:
-      flightNumber: 
+      flightNumber:
         type: string
-      originCode: 
+      originCode:
         type: string
       originCity:
         type: string
@@ -100,4 +100,3 @@ definitions:
         type: string
       scheduledArrival:
         type: string
-        
