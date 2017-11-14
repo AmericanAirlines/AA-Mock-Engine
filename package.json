@@ -1,0 +1,34 @@
+{
+  "name": "TAMUHack-AA",
+  "version": "1.0.0",
+  "description": "A simple backend to help you get up and running with mock data for flight data, travel info, reservations to help you get hacking on the next big thing for AmericanAirlines",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmericanAirlines/TAMUHack-AA.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AmericanAirlines/TAMUHack-AA/issues"
+  },
+  "homepage": "https://github.com/AmericanAirlines/TAMUHack-AA#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "mongodb": "^2.2.33",
+    "swagger": "^0.7.5",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1",
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  }
+}
