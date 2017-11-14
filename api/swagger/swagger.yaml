@@ -3,13 +3,12 @@ info:
   version: "0.0.1"
   title: TAMUHack-AA
 # during dev, should point to your local machine
-# host: localhost:3030
+host: localhost:3030
 # basePath prefixes all resource paths
 basePath: /
 #
 schemes:
   # tip: remove http to make production-grade
-  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
