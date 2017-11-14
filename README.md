@@ -15,3 +15,5 @@ Customize ports by first modifying `.env` (duplicate `.env.sample` then rename).
 
 ## Swagger
 Investigate the API using Swagger. Launch the application with `npm start` and then navigate to `/docs` to see full documentation for the app.
+
+To add new endpoints or modify existing ones, modify `api/swagger/swagger.yml` to map host to `localhost` and allow `http` traffic, then run `swagger project edit`.
