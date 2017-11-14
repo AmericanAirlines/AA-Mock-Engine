@@ -9,7 +9,7 @@ const SwaggerUI      = require('swagger-tools/middleware/swagger-ui');
 const _              = require("lodash");
 
 const app            = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3030;
 
 module.exports = app; // for testing
 
@@ -26,7 +26,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   app.listen(port);
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('Listening on', port, '(Try: curl http://127.0.0.1:' + port + '/hello?name=Scott)');
-  }
+  console.log("App listening on ", port);
+
+  // if (swaggerExpress.runner.swagger.paths['/hello']) {
+  //   console.log('Listening on', port, '(Try: curl http://127.0.0.1:' + port + '/hello?name=Scott)');
+  // }
 });
