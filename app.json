@@ -1,6 +1,6 @@
 {
   "name": "TAMUHack-AA",
-  "description": "A simple backend to help you get up and running with mock data for flight data, travel info, and reservations to help you get hacking on the next big thing for AmericanAirlines",
+  "description": "A simple backend to help you get up and running with mock data for flight data, travel info, and reservations",
   "repository": "https://github.com/AmericanAirlines/TAMUHack-AA",
   "logo": "https://www.aa.com/newamerican/img/logo2.png",
   "keywords": ["node", "express", "American Airlines", "TAMUHack"]
