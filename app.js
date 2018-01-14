@@ -5,23 +5,17 @@ const express        = require('express');
 const bodyParser     = require('body-parser');
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUI      = require('swagger-tools/middleware/swagger-ui');
-const MongoDB        = require('mongodb');
-const _              = require("lodash");
+const _              = require('lodash');
+const mongoHelper    = require('./api/helpers/mongoHelper');
 
-const MongoClient    = MongoDB.MongoClient;
-const dbPath         = "mongodb://localhost:27017/tamuhack";
 const app            = express();
 const port = process.env.PORT || 3030;
-
-var db;
-
-
 
 module.exports = app; // for testing
 let appRoot = __dirname;
 global.appRoot = appRoot;
 let config = {
-  appRoot: appRoot // required config
+  appRoot: appRoot     // required config
 };
 
 
@@ -47,17 +41,21 @@ start().catch(function(err) {
 
 function start() {
     var promises = [];
-    let dbPromise = new Promise(function(resolve, reject) {
-        console.log(dbPath);
-        MongoClient.connect(dbPath, function(err, dbConnection) {
-            if (err) throw err;
-            db = dbConnection;
-            resolve();
-        });
-    });
-    promises.push(dbPromise);
+
+    // Do all async setup here, example:
+    // let someAsyncCall = something();
+    // promises.push(someAsyncCall);
+
+    promises.push(mongoHelper.connectToDb());
 
     return Promise.all(promises).then(function(){
         console.log("\n\nSetup complete!");
     });
 }
+
+
+// ~~~~~ ROUTING ~~~~~
+app.get('/', function(req, res) {
+    // Redirect all traffic to docs
+    res.redirect('/docs');
+});

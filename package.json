@@ -23,15 +23,24 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
+    "email-validator": "^1.1.1",
     "express": "^4.16.2",
+    "lodash": "^4.17.4",
     "mongodb": "^2.2.33",
+    "randomstring": "^1.1.5",
     "swagger": "^0.7.5",
     "swagger-editor": "^3.1.15",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1",
+    "nodemon": "^1.14.11",
     "should": "^7.1.0",
     "supertest": "^1.0.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/"
+    ],
+    "verbose": true
   }
 }

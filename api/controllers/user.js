@@ -1,44 +1,70 @@
 'use strict';
-const _ = require("lodash");
+const _                 = require('lodash');
+const mongoHelper       = require('../helpers/mongoHelper');
+const randomstring      = require('randomstring');
+const emailValidator    = require('email-validator');
 
 module.exports = {
     user: user,
     createUser: createUser
 };
 
-
 function user(req, res) {
-    var userId = req.swagger.params.userId.value;
-    console.log("Looking for user: ", userId);
-    if(userId == 1) {
-        var user = {"email":"kgrinikhin0@example.com","aadvantageId":"U9X8A0R","id":1,"firstName":"Kelvin","lastName":"Grinikhin","gender":"Male"};
-        res.json(user);
-    } else {
-        res.status(400).json({"error": "User could not be found"})
+    var email = _.toLower(req.swagger.params.email.value);
+    console.log("Looking for user: ", email);
+    let users = mongoHelper.getDb().collection("user");
+    try {
+        users.findOne({email: email}, function(err, record) {
+            if (err || record == null) {
+                res.status(400).json({"error": "User could not be found"});
+                console.log(err);
+                return;
+            };
+            res.json(record);
+        });
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for user"});
     }
 };
 
 function createUser(req, res) {
-    var firstName = _.get(req, "swagger.params.firstName.value");
-    var lastName = _.get(req, "swagger.params.lastName.value");
-    var gender = _.get(req, "swagger.params.gender.value");
-    var email = _.get(req, "swagger.params.email.value");
-    var aadvantageId = _.get(req, "swagger.params.aadvantageId.value");
+    var record = {};
+    record.firstName = _.get(req, "swagger.params.firstName.value");
+    record.lastName = _.get(req, "swagger.params.lastName.value");
+    record.gender = _.get(req, "swagger.params.gender.value");
+    record.email = _.toLower(_.get(req, "swagger.params.email.value"));
+    record.aadvantageId = _.get(req, "swagger.params.aadvantageId.value");
 
-    // TODO: check if email already exists
+    if (!emailValidator.validate(record.email)) {
+        res.status(400).json({"error": "Invalid email address"});
+        return;
+    }
 
-    if(firstName && lastName && gender && email) {
-        if (!aadvantageId) {
-            aadvantageId = createAadvantageId();
+    if(record.firstName && record.lastName && record.gender && record.email) {
+        if (!record.aadvantageId) {
+            record.aadvantageId = createAadvantageId();
         }
-        var user = {"email":email,"aadvantageId": aadvantageId,"id": 1001,"firstName": firstName,"lastName": lastName,"gender": gender};
-        res.json(user);
+
+        let users = mongoHelper.getDb().collection("user");
+        try {
+            users.insertOne(record, function(err, response) {
+                let user = _.get(response, "ops[0]");
+                if (err || !user) {
+                    res.status(400).json({"error": "User could not be created", "reason": err});
+                    console.log(err);
+                    return;
+                };
+                res.json(user);
+            });
+        } catch(err) {
+            res.status(400).json({"error": "Something went wrong creating user"});
+        }
     } else {
-        res.status(400).json({"error": "User could not be created"})
+        res.status(400).json({"error": "User could not be created; required fields missing"});
     }
 }
 
 
 function createAadvantageId() {
-    return "AA1234";
+    return _.toUpper(randomstring.generate(7));
 }

@@ -41,11 +41,11 @@ paths:
         - User
       operationId: user
       parameters:
-        - name: userId
+        - name: email
           in: query
-          description: User ID
+          description: Email address
           required: true
-          type: integer
+          type: string
       responses:
         "200":
           description: User found
@@ -188,6 +188,12 @@ paths:
       operationId: airports
       tags:
         - Airport
+      parameters:
+      - name: code
+        in: query
+        description: Airport code
+        required: false
+        type: string
       responses:
         "200":
           description: Success
@@ -254,20 +260,28 @@ definitions:
       scheduledArrival:
         type: string
   Airport:
+    required:
+      - code
     properties:
-      airportCode: 
+      id:
+        type: integer
+      code: 
         type: string
-      airportName: 
+      name: 
         type: string
       city:
         type: string
-      state:
+      stateCode:
         type: string
-      country:
+      countryName:
+        type: string
+      countryCode:
         type: string
       longitude:
-        type: string
+        type: number
       latitude:
+        type: number
+      admiralsClubUrl:
         type: string
   Gender:
     type: string

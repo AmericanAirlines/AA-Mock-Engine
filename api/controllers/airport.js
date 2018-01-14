@@ -1,22 +1,26 @@
 'use strict';
-const _ = require("lodash");
+const _                 = require('lodash');
+const mongoHelper       = require('../helpers/mongoHelper');
 
 module.exports = {
     airports: airports
 };
 
 function airports(req, res) {
-    if (true) {
-        res.json([{
-            "airportCode": "LAX",
-            "airportName": "Los Angeles International",
-            "city": "Los Angeles",
-            "state": "CA",
-            "country": "USA",
-            "longitude": "123",
-            "latitude": "456"
-        }]);
-    } else {
-        res.status(500).json({"error": "Airports matching the query could not be found"})
+    let airportCode = _.toUpper(req.swagger.params.code.value);
+    let airports = mongoHelper.getDb().collection("airport");
+    try {
+        var params = {};
+        if (airportCode) params.code = airportCode;
+        var cursor = airports.find(params).sort({ code : -1 });
+        cursor.toArray(function(err, records) {
+            if (err || records == null || records.length == 0) {
+                res.status(400).json({"error": "Airport(s) could not be found"});
+                return;
+            };
+            res.json(records);
+        });
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for airport(s)", err: err});
     }
 }
