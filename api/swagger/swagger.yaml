@@ -8,7 +8,7 @@ basePath: /
 # host: localhost:3030
 schemes:
   # Uncomment for local dev:
-  # - http
+  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -17,10 +17,90 @@ consumes:
 produces:
   - application/json
 paths:
+  /mock:
+    x-swagger-router-controller: mock
+    post:
+      description: Populates the DB with mock data
+      tags:
+        - Mock
+      operationId: mock
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        "500":
+          description: Error populating DB
+          schema:
+            type: string
+  /user:
+    x-swagger-router-controller: user
+    get:
+      description: Returns a user object matching the specified information
+      tags:
+        - User
+      operationId: user
+      parameters:
+        - name: userId
+          in: query
+          description: User ID
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: User could not be found
+          schema:
+            type: string
+    post:
+      description: Creates a user object with the specified data
+      tags:
+        - User
+      operationId: createUser
+      parameters:
+        - name: firstName
+          in: query
+          description: First name
+          required: true
+          type: string
+        - name: lastName
+          in: query
+          description: Last name
+          required: true
+          type: string
+        - name: email
+          in: query
+          description: Email address
+          required: true
+          type: string
+        - name: gender
+          in: query
+          description: Gender
+          required: true
+          type: string
+        - name: aadvantageNumber
+          in: query
+          description: AAdvantage number
+          required: false
+          type: string
+      responses:
+        "200":
+          description: User created
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: User could not be created
+          schema:
+            type: string
   /reservation:
     x-swagger-router-controller: reservation
     get:
       description: Returns a reservation matching the specified record locator
+      tags:
+        - Reservation
       operationId: reservation
       parameters:
         - name: recordLocator
@@ -33,15 +113,44 @@ paths:
           description: Success
           schema:
             # a pointer to a definition
-            $ref: "#/definitions/ReservationResponse"
+            $ref: "#/definitions/Reservation"
         "500":
             description: Reservation not found
             schema:
               type: string
+    post:
+      description: Creates a reservation with the specified data
+      tags:
+        - Reservation
+      operationId: createReservation
+      parameters:
+      - name: userId
+        in: query
+        description: User ID
+        required: true
+        type: integer
+      - name: flightNumbers
+        in: query
+        description: Last name
+        required: true
+        type: array
+        items: 
+          type: integer
+      responses:
+        "200":
+          description: Reservation created
+          schema:
+            $ref: "#/definitions/Reservation"
+        "400":
+          description: Reservation could not be created
+          schema:
+            type: string
   /flight:
     x-swagger-router-controller: flight
     get:
       description: Returns a flight matching the specified flight number
+      tags:
+          - Flight
       operationId: flight
       parameters:
           - name: flightNumber
@@ -63,6 +172,8 @@ paths:
     x-swagger-router-controller: flight
     get:
       operationId: flights
+      tags:
+          - Flight
       responses:
         "200":
           description: Success
@@ -71,11 +182,44 @@ paths:
             type: array
             items:
               $ref: "#/definitions/FlightSegment"
+  /airports:
+    x-swagger-router-controller: airport
+    get:
+      operationId: airports
+      tags:
+        - Airport
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            type: array
+            items:
+              $ref: "#/definitions/Airport"
   /docs:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  ReservationResponse:
+  User:
+    required:
+      - firstName
+      - lastName
+      - gender
+      - email
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      gender:
+        $ref: "#/definitions/Gender"
+      email:
+        type: string
+      aadvantageId:
+        type: string
+      id:
+        type: integer
+  Reservation:
     required:
       - recordLocator
     properties:
@@ -109,3 +253,25 @@ definitions:
         type: string
       scheduledArrival:
         type: string
+  Airport:
+    properties:
+      airportCode: 
+        type: string
+      airportName: 
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      country:
+        type: string
+      longitude:
+        type: string
+      latitude:
+        type: string
+  Gender:
+    type: string
+    enum:
+      - Male
+      - Female
+      - Other

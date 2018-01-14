@@ -2,20 +2,28 @@
 require("dotenv").config();
 
 const express        = require('express');
-const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUI      = require('swagger-tools/middleware/swagger-ui');
+const MongoDB        = require('mongodb');
 const _              = require("lodash");
 
+const MongoClient    = MongoDB.MongoClient;
+const dbPath         = "mongodb://localhost:27017/tamuhack";
 const app            = express();
 const port = process.env.PORT || 3030;
 
-module.exports = app; // for testing
+var db;
 
-var config = {
-  appRoot: __dirname // required config
+
+
+module.exports = app; // for testing
+let appRoot = __dirname;
+global.appRoot = appRoot;
+let config = {
+  appRoot: appRoot // required config
 };
+
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
@@ -32,3 +40,24 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   //   console.log('Listening on', port, '(Try: curl http://127.0.0.1:' + port + '/hello?name=Scott)');
   // }
 });
+
+start().catch(function(err) {
+    console.log("Something went wrong... ", err);
+});
+
+function start() {
+    var promises = [];
+    let dbPromise = new Promise(function(resolve, reject) {
+        console.log(dbPath);
+        MongoClient.connect(dbPath, function(err, dbConnection) {
+            if (err) throw err;
+            db = dbConnection;
+            resolve();
+        });
+    });
+    promises.push(dbPromise);
+
+    return Promise.all(promises).then(function(){
+        console.log("\n\nSetup complete!");
+    });
+}

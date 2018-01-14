@@ -30,7 +30,6 @@ function flight(req, res) {
     } else {
         res.status(500).json({"error": "Flight could not be found"})
     }
-
 }
 
 function flights(req, res) {

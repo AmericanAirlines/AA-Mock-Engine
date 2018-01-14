@@ -2,11 +2,12 @@
 const _ = require("lodash");
 
 module.exports = {
-    reservation: reservation
+    reservation: reservation,
+    createReservation: createReservation
 };
 
 function reservation(req, res) {
-    var recordLocator = req.swagger.params.recordLocator.value;
+    var recordLocator = _.get(req, "swagger.params.recordLocator.value");
     if (recordLocator != null && (recordLocator == "tamrox" || recordLocator == "TAMROX")) {
         var now = new Date();
         var soon = new Date(now);
@@ -35,4 +36,9 @@ function reservation(req, res) {
     } else {
         res.status(500).json({"error": "Reservation could not be found"})
     }
+}
+
+
+function createReservation(req, res) {
+
 }
