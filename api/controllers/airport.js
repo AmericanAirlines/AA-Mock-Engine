@@ -12,7 +12,7 @@ function airports(req, res) {
     try {
         var params = {};
         if (airportCode) params.code = airportCode;
-        var cursor = airports.find(params).sort({ code : -1 });
+        var cursor = airports.find(params).sort({ code : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
                 res.status(400).json({"error": "Airport(s) could not be found"});
