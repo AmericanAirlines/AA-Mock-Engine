@@ -29,7 +29,9 @@
     "randomstring": "^1.1.5",
     "swagger": "^0.7.5",
     "swagger-editor": "^3.1.15",
-    "swagger-express-mw": "^0.1.0"
+    "swagger-express-mw": "^0.1.0",
+    "swagger-tools": "^0.10.3",
+    "swagger-ui": "^3.9.1"
   },
   "devDependencies": {
     "nodemon": "^1.14.11",
