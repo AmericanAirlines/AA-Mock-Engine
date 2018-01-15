@@ -8,11 +8,12 @@ basePath: /
 # host: localhost:3030
 schemes:
   # Uncomment for local dev:
-  - http
+  # - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
+  - application/octet-stream
 # format of the responses to the client (Accepts)
 produces:
   - application/json
@@ -135,7 +136,7 @@ paths:
         description: An array of Flight IDs (MongoDB _id)
         required: true
         type: array
-        items: 
+        items:
           type: string
       responses:
         "200":
@@ -313,9 +314,9 @@ definitions:
     properties:
       id:
         type: integer
-      code: 
+      code:
         type: string
-      name: 
+      name:
         type: string
       city:
         type: string
