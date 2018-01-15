@@ -4,5 +4,10 @@
   "repository": "https://github.com/AmericanAirlines/TAMUHack-AA",
   "logo": "https://www.aa.com/newamerican/img/logo2.png",
   "keywords": ["node", "express", "American Airlines", "TAMUHack"],
-  "addons": ["mongolab"]
+  "addons": ["mongolab"],
+  "buildpacks": [
+      {
+          "url": "http://github.com/Lendix/heroku-buildpack-mongo"
+      }
+  ]
 }
