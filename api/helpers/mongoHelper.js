@@ -24,6 +24,18 @@ function setup() {
     });
     promises.push(userPromise);
 
+    let flightsPromise = new Promise(function(resolve, reject) {
+        _db.collection("flight").createIndex({"flightNumber": 1, "departureTime": 1}, {"unique": true}, function(err, response) {
+            if (err) {
+                reject();
+                console.log(err);
+                return;
+            }
+            resolve();
+        });
+    });
+    promises.push(flightsPromise);
+
     return Promise.all(promises);
 }
 

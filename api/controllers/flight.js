@@ -1,55 +1,113 @@
 'use strict';
-const _ = require("lodash");
+const _                 = require('lodash');
+const mongoHelper       = require('../helpers/mongoHelper');
 
 module.exports = {
     flight: flight,
-    flights: flights
+    flights: flights,
+    setFlightStatus: setFlightStatus
+};
+
+
+function user(req, res) {
+    var email = _.toLower(req.swagger.params.email.value);
+    let users = mongoHelper.getDb().collection("user");
+    try {
+        users.findOne({email: email}, function(err, record) {
+            if (err || record == null) {
+                res.status(400).json({"error": "User could not be found"});
+                console.log(err);
+                return;
+            };
+            res.json(record);
+        });
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for user"});
+    }
 };
 
 function flight(req, res) {
-    console.log('looking for flight')
-    var flightNumber = req.swagger.params.flightNumber.value;
-    if (+flightNumber == 123) {
-        var now = new Date();
-        var soon = new Date(now);
-        soon.setHours(soon.getHours() + 4);
+    let dateString = _.get(req, "swagger.params.date.value");
+    let flightNumber = _.get(req, "swagger.params.flightNumber.value");
+    if (!dateString || !flightNumber) {
+        res.status(400).json({"error": "Date and Flight Number are required fields"});
+        return;
+    }
 
-        var flightSegment = {
-            "flightNumber": "123",
-            "originCode": "DFW",
-            "originCity": "Dallas/Fort Worth",
-            "destinationCode": "LAX",
-            "destinationCity": "Los Angeles",
-            "estimatedDeparture": now.toISOString(),
-            "scheduledDeparture": now.toISOString(),
-            "estimatedArrival": soon.toISOString(),
-            "scheduledArrival": soon.toISOString()
-        };
+    let queryParams = {
+        departureTime: getTodayRange(dateString),
+        flightNumber: flightNumber
+    };
 
-        res.json(flightSegment);
-    } else {
-        res.status(500).json({"error": "Flight could not be found"})
+    try {
+        console.log(queryParams)
+        let flights = mongoHelper.getDb().collection("flight");
+
+        flights.findOne(queryParams, function(err, record) {
+            if (err || record == null) {
+                res.status(400).json({"error": "Flight could not be found"});
+                console.log(err);
+                return;
+            };
+            res.json(record);
+        });
+
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for that flight", err: err});
     }
 }
 
 function flights(req, res) {
-    var now = new Date();
-    var soon = new Date(now);
-    soon.setHours(soon.getHours() + 4);
+    var queryParams = {};
 
-    var flightSegment = {
-        "flightNumber": "123",
-        "originCode": "DFW",
-        "originCity": "Dallas/Fort Worth",
-        "destinationCode": "LAX",
-        "destinationCity": "Los Angeles",
-        "estimatedDeparture": now.toISOString(),
-        "scheduledDeparture": now.toISOString(),
-        "estimatedArrival": soon.toISOString(),
-        "scheduledArrival": soon.toISOString()
+    let dateString = _.get(req, "swagger.params.date.value");
+    if (!dateString) {
+        res.status(400).json({"error": "Date is a required field"});
+        return;
+    }
+
+    queryParams.departureTime = getTodayRange(dateString);
+
+    let origin = _.get(req, "swagger.params.origin.value");
+    let destination = _.get(req, "swagger.params.destination.value")
+
+    if (origin) {
+        queryParams.origin = origin;
+    }
+
+    if (destination) {
+        queryParams.destination = destination;
+    }
+
+    try {
+        console.log(queryParams)
+        let flights = mongoHelper.getDb().collection("flight");
+        var cursor = flights.find(queryParams).sort({ departureTime : 1 });
+        cursor.toArray(function(err, records) {
+            if (err || records == null || records.length == 0) {
+                res.status(400).json({"error": "Flights could not be found"});
+                return;
+            }
+            res.json(records);
+        });
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for flights", err: err});
+    }
+}
+
+function getTodayRange(dateString) {
+    // This function is timezone-specific,
+    // meaning it will return "today" for the given timezone
+    let date = new Date(dateString)
+    let nextDay = new Date(date);
+    nextDay.setDate(date.getDate() + 1);
+
+    return {
+        "$gte": date.toISOString(),
+        "$lt": nextDay.toISOString()
     };
+}
 
-    let flightSegments = _.fill(Array(5), flightSegment)
-
-    res.json(flightSegments);
+function setFlightStatus(req, res) {
+    res.json("Success");
 }

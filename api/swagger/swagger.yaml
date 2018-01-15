@@ -81,6 +81,7 @@ paths:
           description: Gender
           required: true
           type: string
+          enum: ["Male", "Female", "Other"]
         - name: aadvantageNumber
           in: query
           description: AAdvantage number
@@ -158,6 +159,12 @@ paths:
             description: "Flight number for the desired flight"
             required: true
             type: string
+          - name: date
+            in: query
+            description: "Departure date for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
+            required: true
+            type: string
+            format: date-time
       responses:
         "200":
           description: Success
@@ -174,6 +181,23 @@ paths:
       operationId: flights
       tags:
           - Flight
+      parameters:
+        - name: origin
+          in: query
+          description: "Airport code for origin"
+          type: string
+          enum: ["DFW", "LAX", "MIA", "PHL", "ORD", "JFK", "LHR", "HKG"]
+        - name: destination
+          in: query
+          description: "Airport code for destination"
+          type: string
+          enum: ["DFW", "LAX", "MIA", "PHL", "ORD", "JFK", "LHR", "HKG"]
+        - name: date
+          in: query
+          description: "Departure date (origin) for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
+          required: true
+          type: string
+          format: date-time
       responses:
         "200":
           description: Success
@@ -182,6 +206,36 @@ paths:
             type: array
             items:
               $ref: "#/definitions/FlightSegment"
+  /flightStatus:
+    x-swagger-router-controller: flight
+    post:
+      operationId: setFlightStatus
+      tags:
+        - Flight
+      parameters:
+        - name: flightNumber
+          in: query
+          description: "Flight number for the desired flight"
+          required: true
+          type: string
+        - name: date-time
+          in: query
+          description: "Departure date for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
+          required: true
+          type: string
+          format: date
+        - name: flightStatus
+          in: query
+          description: "New flight status for the desired flight"
+          required: true
+          type: string
+          default: "On-Time"
+          enum: ["On-Time", "Delayed", "Cancelled"]
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
   /airports:
     x-swagger-router-controller: airport
     get:
