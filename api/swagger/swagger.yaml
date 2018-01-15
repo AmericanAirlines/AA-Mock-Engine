@@ -21,7 +21,7 @@ paths:
   /mock:
     x-swagger-router-controller: mock
     post:
-      description: Populates the DB with mock data
+      description: Populates the DB with mock data (process may take up to 5 minutes)
       tags:
         - Mock
       operationId: mock
