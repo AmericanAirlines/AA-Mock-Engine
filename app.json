@@ -8,6 +8,9 @@
   "buildpacks": [
       {
           "url": "http://github.com/Lendix/heroku-buildpack-mongo"
+      },
+      {
+          "url": "heroku/nodejs"
       }
   ]
 }
