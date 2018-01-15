@@ -1,7 +1,7 @@
 require("dotenv").config();
 const MongoDB        = require('mongodb');
 const MongoClient    = MongoDB.MongoClient;
-const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI + "/tamuhack" : "mongodb://localhost:27017/tamuhack";
+const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/tamuhack";
 
 var _db;
 
@@ -53,6 +53,7 @@ function setup() {
 }
 
 function connectToDb(callback) {
+    console.log("Connecting to MongoDB @ ", dbPath);
     let dbPromise = new Promise(function(resolve, reject) {
         MongoClient.connect(dbPath, function(err, dbConnection) {
             if (err) reject(err);
