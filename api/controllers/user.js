@@ -1,12 +1,14 @@
 'use strict';
 const _                 = require('lodash');
+const mongo             = require('mongodb');
 const mongoHelper       = require('../helpers/mongoHelper');
 const randomstring      = require('randomstring');
 const emailValidator    = require('email-validator');
 
 module.exports = {
     user: user,
-    createUser: createUser
+    createUser: createUser,
+    retrieveUser: retrieveUser
 };
 
 function user(req, res) {
@@ -14,7 +16,7 @@ function user(req, res) {
     console.log("Looking for user: ", email);
     let users = mongoHelper.getDb().collection("user");
     try {
-        users.findOne({email: email}, function(err, record) {
+        users.findOne({"email": email}, function(err, record) {
             if (err || record == null) {
                 res.status(400).json({"error": "User could not be found"});
                 console.log(err);
@@ -33,7 +35,7 @@ function createUser(req, res) {
     record.lastName = _.get(req, "swagger.params.lastName.value");
     record.gender = _.get(req, "swagger.params.gender.value");
     record.email = _.toLower(_.get(req, "swagger.params.email.value"));
-    record.aadvantageId = _.get(req, "swagger.params.aadvantageId.value");
+    record.aadvantageId = _.get(req, "swagger.params.aadvantageNumber.value");
 
     if (!emailValidator.validate(record.email)) {
         res.status(400).json({"error": "Invalid email address"});
@@ -64,6 +66,23 @@ function createUser(req, res) {
     }
 }
 
+function retrieveUser(userId) {
+    let users = mongoHelper.getDb().collection("user");
+    return new Promise(function(resolve, reject) {
+        try {
+            userId = new mongo.ObjectID(userId);
+            users.findOne({"_id": userId}, function(err, record) {
+                if (err) {
+                    reject(err);
+                    return null;
+                };
+                resolve(record);
+            });
+        } catch(err) {
+            reject(err);
+        }
+    })
+}
 
 function createAadvantageId() {
     return _.toUpper(randomstring.generate(7));

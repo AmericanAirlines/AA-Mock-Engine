@@ -1,11 +1,13 @@
 'use strict';
 const _                 = require('lodash');
 const mongoHelper       = require('../helpers/mongoHelper');
+const mongo             = require('mongodb');
 
 module.exports = {
     flight: flight,
     flights: flights,
-    setFlightStatus: setFlightStatus
+    setFlightStatus: setFlightStatus,
+    retrieveFlights: retrieveFlights
 };
 
 
@@ -82,7 +84,7 @@ function flights(req, res) {
     try {
         console.log(queryParams)
         let flights = mongoHelper.getDb().collection("flight");
-        var cursor = flights.find(queryParams).sort({ departureTime : 1 });
+        var cursor = flights.find(queryParams).sort({ "departureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
                 res.status(400).json({"error": "Flights could not be found"});
@@ -94,6 +96,32 @@ function flights(req, res) {
         res.status(400).json({"error": "Something went wrong looking for flights", err: err});
     }
 }
+
+function retrieveFlights(flightIds) {
+    return new Promise(function(resolve, reject) {
+        var flightObjectIds = [];
+        _.each(flightIds, function(flightId) {
+             flightObjectIds.push(new mongo.ObjectID(flightId));
+        });
+
+        let query = {
+            "_id": {
+                "$in": flightObjectIds
+            }
+        };
+
+        let flights = mongoHelper.getDb().collection("flight");
+        var cursor = flights.find(query).sort({ "departureTime" : 1 });
+        cursor.toArray(function(err, records) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(records);
+        });
+    });
+}
+
 
 function getTodayRange(dateString) {
     // This function is timezone-specific,
@@ -109,5 +137,25 @@ function getTodayRange(dateString) {
 }
 
 function setFlightStatus(req, res) {
-    res.json("Success");
+    var flightId = _.get(req, "swagger.params.flightId.value");
+    flightId = new mongo.ObjectID(flightId);
+    let flightStatus = _.get(req, "swagger.params.flightStatus.value")
+
+    let flights = mongoHelper.getDb().collection("flight");
+    let updates = {
+        "$set": {
+            "flightStatus": flightStatus
+        }
+    };
+    try {
+        flights.updateOne({"_id": flightId}, updates, function(err, record) {
+            if (err) {
+                res.status(400).json({"error": "Something went wrong updating flight status", err: err});
+            }
+            res.json(record);
+        });
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong updating flight status", err: err});
+    }
+
 }

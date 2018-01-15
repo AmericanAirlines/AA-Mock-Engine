@@ -36,6 +36,18 @@ function setup() {
     });
     promises.push(flightsPromise);
 
+    let reservationsPromise = new Promise(function(resolve, reject) {
+        _db.collection("reservation").createIndex({"recordLocator": 1}, {"unique": true}, function(err, response) {
+            if (err) {
+                reject();
+                console.log(err);
+                return;
+            }
+            resolve();
+        });
+    });
+    promises.push(reservationsPromise);
+
     return Promise.all(promises);
 }
 

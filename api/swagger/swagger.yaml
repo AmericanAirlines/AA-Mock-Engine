@@ -129,14 +129,14 @@ paths:
         in: query
         description: User ID
         required: true
-        type: integer
-      - name: flightNumbers
+        type: string
+      - name: flightIds
         in: query
-        description: Last name
+        description: An array of Flight IDs (MongoDB _id)
         required: true
         type: array
         items: 
-          type: integer
+          type: string
       responses:
         "200":
           description: Reservation created
@@ -213,17 +213,11 @@ paths:
       tags:
         - Flight
       parameters:
-        - name: flightNumber
+        - name: flightId
           in: query
-          description: "Flight number for the desired flight"
+          description: "Flight ID (MongoDB _id) for the desired flight"
           required: true
           type: string
-        - name: date-time
-          in: query
-          description: "Departure date for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
-          required: true
-          type: string
-          format: date
         - name: flightStatus
           in: query
           description: "New flight status for the desired flight"
