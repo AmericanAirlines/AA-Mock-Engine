@@ -273,7 +273,7 @@ definitions:
       aadvantageId:
         type: string
       id:
-        type: integer
+        type: string
   Reservation:
     required:
       - recordLocator
@@ -313,7 +313,7 @@ definitions:
       - code
     properties:
       id:
-        type: integer
+        type: string
       code:
         type: string
       name:
