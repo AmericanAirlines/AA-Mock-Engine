@@ -8,6 +8,8 @@ A simple backend to help you get up and running with mock data for flight data, 
 ## Deploying to Heroku
 Click the "Deploy to Heroku" button above to create an instance of the application in Heroku. You can use this instance for web and native app projects. After deploying, open the app and you will be redirected to the [Swagger docs](#swagger).
 
+*Note*: if you plan to make changes to the backend, fork this repo before deploying to Heroku!
+
 ## Running Locally
 ### Dependencies
 1. Run `npm install` to download all project devDependencies.
