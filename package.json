@@ -31,7 +31,8 @@
     "swagger-editor": "^3.1.15",
     "swagger-express-mw": "^0.1.0",
     "swagger-tools": "^0.10.3",
-    "swagger-ui": "^3.9.1"
+    "swagger-ui": "^3.9.1",
+    "tar": "^4.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.14.11",
