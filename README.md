@@ -24,7 +24,7 @@ To run the app in dev, run `npm run dev`. This will start the app using [Nodemon
 
 
 ## Mock Data
-To populate the DB with mock data (users, flights, airports), either use `npm run mock` or navigate to SwaggerUI (/docs) and execute the Mock post request. _Note_: mock data population can take some time, especially if you're running in Heroku. Running `npm run mock` locally, from Heroku's UI, or from the Heroku CLI will let you monitor progress.
+To populate the DB with mock data (users, flights, airports), either use `npm run mock` or navigate to SwaggerUI (/docs) and execute the `/mock` post request. _Note_: mock data population can take some time, especially if you're running in Heroku. Running `npm run mock` locally, from Heroku's UI, or from the Heroku CLI will let you monitor progress. If you start the process from Swagger, you can see progress by navigating to your app's dashboard and then selecting "View Logs" from the "More" dropdown.
 
 
 ## Swagger
