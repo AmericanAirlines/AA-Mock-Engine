@@ -7,6 +7,10 @@ const fs        = require('fs');
 const tar       = require('tar');
 const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/tamuhack";
 
+module.exports = {
+    startImport: startImport
+};
+
 var config = {};
 if (process.env.MONGODB_URI) {
     let re = /mongodb:\/\/([A-z0-9]+):([A-z0-9]+)@(.*):([0-9]+)\/([A-z0-9]+)/g;
@@ -40,9 +44,6 @@ let mockDataFiles = {
 
 let mockDir = __dirname;
 let flightDataPath = mockDir + "/flights/";
-
-
-importAll();
 
 function importGeneral() {
     _.forEach(mockDataFiles, function(info, file) {
@@ -152,15 +153,19 @@ function recursiveImportFlightsFiles(files, path, currFileIndex) {
 }
 
 
-function importAll() {
-    console.time("Import");
-    importGeneral();
-    importFlights().then(function() {
-        console.timeEnd("Import");
-        console.log("Done.");
-        process.exit(0);
-    }).catch(function(err) {
-        console.log(err);
-        process.exit(1);
+function startImport() {
+    var importPromise = new Promise(function(resolve, reject) {
+        console.time("Import");
+        importGeneral();
+        importFlights().then(function() {
+            console.timeEnd("Import");
+            console.log("Done.");
+            resolve();
+        }).catch(function(err) {
+            console.log(err);
+            reject();
+        });
     });
+    
+    return importPromise;
 }

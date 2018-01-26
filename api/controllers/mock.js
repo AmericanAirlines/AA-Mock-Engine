@@ -1,5 +1,5 @@
 'use strict';
-const { exec }       = require('child_process');
+const mockHelper = require(global.appRoot + "/mock/populateDb.js");
 
 module.exports = {
     mock: mock
@@ -7,16 +7,8 @@ module.exports = {
 
 function mock(req, res) {
     console.log("Adding mock data to MongoDB");
-    console.log("Command: node " + global.appRoot + "/mock/populateDb.js");
-    exec("node " + global.appRoot + "/mock/populateDb.js", function(err) {
-        if (err) {
-            console.log("Failed to import mock data", err);
-            // res.status(500).json("Mock data could not be inserted into DB");
-            return;
-        }
-        console.log("Returning success");
 
-    });
+    mockHelper.startImport();
 
     // TODO: Investigate a more appropriate way of handling errors during import
     res.json("Mock data import started. Please check the logs for more information.");
