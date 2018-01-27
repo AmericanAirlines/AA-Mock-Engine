@@ -10,6 +10,11 @@ Click the "Deploy to Heroku" button above to create an instance of the applicati
 
 *Note*: if you plan to make changes to the backend, fork this repo before deploying to Heroku!
 
+#### mLab MongoDB Add-On
+If you would like to edit/modify data in your mLab MongoDB instance, navigate to your project's dashboard and click the "mLab MongoDB" link. From their website, you can view collections, search for documents, and add/edit documents.
+
+If you'd like to connect to your DB with a Mongo Client (Like [Robo 3T](https://robomongo.org)), navigate to your Heroku instance's settings tab, click "Reveal Config Vars" and then grab your credentials and config values from the URL with the following format: `mongodb://[User]:[Pass]@[Hostname]:[Port]/[DB Name]`.
+
 ## Running Locally
 ### Dependencies
 1. Run `npm install` to download all project devDependencies.
@@ -30,7 +35,7 @@ To populate the DB with mock data (users, flights, airports), either use `npm ru
 ## Swagger
 Starting the app will let you investigate the API via Swagger by utilizing the interactive methods found at `/docs`. You can examine different endpoints to see their request/response structure and retrieve/create data.
 
-To add new endpoints or modify existing ones, use Swagger Editor (run `swagger project edit` from the project root) to modify `api/swagger/swagger.yml`. To execute commands locally, uncomment the `http` option under schemes. To execute commands from the Swagger Editor, uncomment the `host` declaration under base path.
+To add new endpoints or modify existing ones, use Swagger Editor (run `swagger project edit` from the project root after installing Swagger globally with `npm install swagger -g`) to modify `api/swagger/swagger.yml`. To execute commands locally, uncomment the `http` option under schemes. To execute commands from the Swagger Editor, uncomment the `host` declaration under base path.
 
 
 ## Contributing
