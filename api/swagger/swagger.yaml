@@ -8,7 +8,7 @@ basePath: /
 # host: localhost:3030
 schemes:
   # Uncomment for local dev:
-  # - http
+  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -162,10 +162,10 @@ paths:
             type: string
           - name: date
             in: query
-            description: "Departure date for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
+            description: "Departure date for the desired flight (e.g., \"2018-03-01\")"
             required: true
             type: string
-            format: date-time
+            format: date
       responses:
         "200":
           description: Success
@@ -195,10 +195,10 @@ paths:
           enum: ["DFW", "LAX", "MIA", "PHL", "ORD", "JFK", "LHR", "HKG"]
         - name: date
           in: query
-          description: "Departure date (origin) for the desired flight (e.g., \"2018-03-01T08:45-06:00\")"
+          description: "Departure date (origin) for the desired flight (e.g., \"2018-03-01\")"
           required: true
           type: string
-          format: date-time
+          format: date
       responses:
         "200":
           description: Success

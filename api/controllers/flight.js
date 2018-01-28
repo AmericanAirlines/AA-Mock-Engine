@@ -126,6 +126,10 @@ function retrieveFlights(flightIds) {
 function getTodayRange(dateString) {
     // This function is timezone-specific,
     // meaning it will return "today" for the given timezone
+
+    // TODO: Fix this for all timezones east of UTC
+    // e.g., a flight at 10pm will roll to the next day and the comparison will fail
+
     let date = new Date(dateString)
     let nextDay = new Date(date);
     nextDay.setDate(date.getDate() + 1);
