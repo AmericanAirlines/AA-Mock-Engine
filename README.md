@@ -23,7 +23,7 @@ If you'd like to connect to your DB with a Mongo Client (Like [Robo 3T](https://
 After installing all dependencies and starting the MongoDB daemon, simply run `npm start` to start the application.
 
 ### Developing Locally
-To run the app in dev, run `npm run dev`. This will start the app using [Nodemon](https://github.com/remy/nodemon), which will restart the server after changes. When using this command, start the Mongo.
+To run the app in dev, run `npm run dev`. This will start the app using [Nodemon](https://github.com/remy/nodemon), which will restart the server after changes. When using this command, start the Mongo. Finally, to utilize the Swagger UI locally, read through the [Swagger](#swagger) section below as there are some required changes.
 
 
 ## Mock Data
