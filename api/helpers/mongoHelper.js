@@ -1,7 +1,7 @@
 require("dotenv").config();
 const MongoDB        = require('mongodb');
 const MongoClient    = MongoDB.MongoClient;
-const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/tamuhack";
+const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/aa-mock-engine";
 
 var _db;
 

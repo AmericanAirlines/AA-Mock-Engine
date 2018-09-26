@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmericanAirlines/TAMUHack-AA.git"
+    "url": "git+https://github.com/AmericanAirlines/AA-Mock-Engine.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AmericanAirlines/TAMUHack-AA/issues"
+    "url": "https://github.com/AmericanAirlines/AA-Mock-Engine/issues"
   },
-  "homepage": "https://github.com/AmericanAirlines/TAMUHack-AA#readme",
+  "homepage": "https://github.com/AmericanAirlines/AA-Mock-Engine#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^4.0.0",
