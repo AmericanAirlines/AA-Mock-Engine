@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: TAMUHack-AA
+  title: AA-Mock-Engine
 # basePath prefixes all resource paths
 basePath: /
 # Uncomment for local dev:
