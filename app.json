@@ -1,9 +1,9 @@
 {
-  "name": "TAMUHack-AA",
+  "name": "AA-Mock-Engine",
   "description": "A simple backend to help you get up and running with mock data for flight data, travel info, and reservations",
-  "repository": "https://github.com/AmericanAirlines/TAMUHack-AA",
+  "repository": "https://github.com/AmericanAirlines/AA-Mock-Engine",
   "logo": "https://www.aa.com/newamerican/img/logo2.png",
-  "keywords": ["node", "express", "American Airlines", "TAMUHack"],
+  "keywords": ["node", "express", "American Airlines", "flight data", "swagger"],
   "addons": ["mongolab"],
   "buildpacks": [
       {
