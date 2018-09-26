@@ -5,7 +5,7 @@ const { exec }  = require('child_process');
 const _         = require('lodash');
 const fs        = require('fs');
 const tar       = require('tar');
-const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/tamuhack";
+const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/aa-mock-engine";
 
 module.exports = {
     startImport: startImport
@@ -25,7 +25,7 @@ if (process.env.MONGODB_URI) {
         console.log("Couldn't parse mongodb uri successfully.")
     }
 } else {
-    config.db = "tamuhack";
+    config.db = "aa-mock-engine";
     config.host = "localhost";
     config.port = "27017";
 }
@@ -166,6 +166,6 @@ function startImport() {
             reject();
         });
     });
-    
+
     return importPromise;
 }
