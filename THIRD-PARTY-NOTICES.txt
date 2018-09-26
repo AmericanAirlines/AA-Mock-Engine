@@ -1,0 +1,3 @@
+This project is entirely composed of custom, AA-developed code.
+
+If 3rd party code is utilized in the future, attribution will be added here.
