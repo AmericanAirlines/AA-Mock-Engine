@@ -27,7 +27,7 @@ Before the app can be run locally, edit `api/swagger/swagger.yml` and uncomment 
 After installing all dependencies and starting the MongoDB daemon (`mongod --dbpath=./data`), simply run `npm start` to start the application.
 
 ### Developing Locally
-To run the app in dev, start the MongoDB daemon (`mongod --dbpath=./data`) then run `npm run dev`. This will start the app using [Nodemon](https://github.com/remy/nodemon), which will restart the server after changes.
+To run the app in dev then run `npm run dev`. This will start the app using [Concurrently](https://www.npmjs.com/package/concurrently) which will simultaneously start the Mongo daemon and then start and monitor the app via [Nodemon](https://github.com/remy/nodemon). When a change is detected, Nodemon will restart the application.
 
 ## Mock Data
 To populate the DB with mock data (users, flights, airports), either use `npm run mock` or navigate to SwaggerUI (/docs) and execute the `/mock` post request. _Note_: mock data population can take some time, especially if you're running in Heroku. Running `npm run mock` locally, from Heroku's UI, or from the Heroku CLI will let you monitor progress. If you start the process from Swagger, you can see progress by navigating to your app's dashboard and then selecting "View Logs" from the "More" dropdown.
