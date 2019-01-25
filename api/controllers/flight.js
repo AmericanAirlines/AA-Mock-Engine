@@ -24,7 +24,7 @@ function flight(req, res) {
     }
 
     let queryParams = {
-        departureTime: getTodayRange(dateString),
+        scheduledDepartureTime: getQueryForDate(dateString),
         flightNumber: flightNumber
     };
 
@@ -55,7 +55,7 @@ function flights(req, res) {
         return;
     }
 
-    queryParams.departureTime = getTodayRange(dateString);
+    queryParams.scheduledDepartureTime = getQueryForDate(dateString);
 
     let origin = _.get(req, "swagger.params.origin.value");
     let destination = _.get(req, "swagger.params.destination.value")
@@ -71,7 +71,7 @@ function flights(req, res) {
     try {
         console.log(queryParams)
         let flights = mongoHelper.getDb().collection("flight");
-        var cursor = flights.find(queryParams).sort({ "departureTime" : 1 });
+        var cursor = flights.find(queryParams).sort({ "scheduledDepartureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
                 console.error(err)
@@ -99,7 +99,7 @@ function retrieveFlights(flightIds) {
         };
 
         let flights = mongoHelper.getDb().collection("flight");
-        var cursor = flights.find(query).sort({ "departureTime" : 1 });
+        var cursor = flights.find(query).sort({ "scheduledDepartureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err) {
                 reject(err);
@@ -110,6 +110,10 @@ function retrieveFlights(flightIds) {
     });
 }
 
+function getQueryForDate(datestring) {
+    let date = moment.utc(datestring).format('YYYY-MM-DD');
+    return { '$regex': date + '.*'};
+}
 
 function getTodayRange(dateString) {
     // This function is timezone-specific,

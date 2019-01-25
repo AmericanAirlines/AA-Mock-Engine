@@ -339,23 +339,25 @@ definitions:
           $ref: "#/definitions/FlightSegment"
   FlightSegment:
     properties:
+      cost:
+        type: number
       flightNumber:
         type: string
       originCode:
         type: string
-      originCity:
-        type: string
+      # originCity:
+      #   type: string
       destinationCode:
         type: string
-      destinationCity:
+      # destinationCity:
+      #   type: string
+      estimatedDepartureTime:
         type: string
-      estimatedDeparture:
+      scheduledDepartureTime:
         type: string
-      scheduledDeparture:
+      estimatedArrivalTime:
         type: string
-      estimatedArrival:
-        type: string
-      scheduledArrival:
+      scheduledArrivalTime:
         type: string
   Airport:
     required:

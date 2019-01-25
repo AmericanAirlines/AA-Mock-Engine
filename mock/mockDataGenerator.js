@@ -77,23 +77,31 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
     const flightsToInsert = [];
 
     // Make sure dates are Moment objects and erase time for cleaner comparisons
-    startDate = moment(startDate).startOf('day');
-    endDate = moment(endDate).startOf('day');
+    startDate = moment.utc(startDate).startOf('day');
+    endDate = moment.utc(endDate).startOf('day');
 
     // Read flightsData as a JSON object
     let flightsTemplate = require('./flightData.json');
+    console.log('Creating flights from ' + startDate.format() + ' to ' + endDate.format());
 
     while (startDate <= endDate) {
         let currDate = startDate.clone();
 
         // Iterate over all flights for all origins
         for (const [originCode, data] of Object.entries(flightsTemplate)) {
-            const { flights } = data;
+            const { flights, volatility } = data;
             const numFlights = _.random(10, Math.min(flights.length, maxPerDay));
             const todaysFlights = _.sampleSize(flights, numFlights);
 
+            // console.log('Creating ' + todaysFlights.length + ' flights for ' + originCode + ' on ' + currDate.format());
+
             todaysFlights.forEach(flight => {
-                const { flightNumber, destination: destinationCode, departureTime: departure } = flight;
+                const {
+                    flightNumber,
+                    baseCost,
+                    destination: destinationCode,
+                    departureTime: departure
+                } = flight;
 
                 // Change timezone without changing day
                 const departureTimeZone = timezoneCodeForAirportCode(originCode);
@@ -110,21 +118,24 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                    .add(flight.durationInMinutes, 'minute')
                    .tz(arrivalTimeZone);  // Change timezone AFTER updating time
 
+                let cost = +(baseCost * volatility * _.random(0.65, 1.3, true)).toFixed(2);
+
                 try {
                     const mongoFlight = {
+                        cost,
                         flightNumber,
                         originCode,
                         // originCity,
                         destinationCode,
                         // destinationCity: cityForAirportCode(destinationCode),
-                        estimatedDeparture: departureTime.toISOString(true),
-                        scheduledDeparture: departureTime.toISOString(true),
-                        estimatedArrival: arrivalTime.toISOString(true),
-                        scheduledArrival: arrivalTime.toISOString(true),
+                        estimatedDepartureTime: departureTime.toISOString(true),
+                        scheduledDepartureTime: departureTime.toISOString(true),
+                        estimatedArrivalTime: arrivalTime.toISOString(true),
+                        scheduledArrivalTime: arrivalTime.toISOString(true),
                     };
                     flightsToInsert.push(mongoFlight);
                 } catch (err) {
-                    console.error('Wat', err);
+                    console.error(err);
                     // Something might have gone wrong with the dates (timezone not found)
                 }
             });

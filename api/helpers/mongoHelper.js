@@ -54,13 +54,15 @@ function setup() {
 }
 
 function bulkUpsert(collectionName, records, upsertKey) {
+    // TODO: Fix this to make upsert key more generic
+    //    Right now the departure time is hardcoded
     const collection = _db.collection(collectionName);
 
     const operations = [];
     records.forEach((record) => {
         operations.push({
             updateOne: {
-                filter: { [upsertKey]: record[upsertKey] },
+                filter: { [upsertKey]: record[upsertKey], scheduledDepartureTime: record.scheduledDepartureTime },
                 update: { $set: record },
                 upsert: true,
             }
@@ -76,7 +78,7 @@ function bulkUpsert(collectionName, records, upsertKey) {
             console.error(err);
             return;
         }
-        console.log(result)
+        console.log('Records modified: ' + result.modifiedCount);
     });
 }
 
