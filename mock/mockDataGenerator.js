@@ -1,10 +1,11 @@
 'use strict';
 require("dotenv").config();
 
-const { exec }  = require('child_process');
-const _         = require('lodash');
-const fs        = require('fs');
-const mongoHelper       = require('../api/helpers/mongoHelper');
+const { exec }      = require('child_process');
+const _             = require('lodash');
+const moment        = require('moment-timezone');
+const fs            = require('fs');
+const mongoHelper   = require('../api/helpers/mongoHelper');
 
 const constants = {
     thousandDays: 1000 * 24 * 60 * 60 * 1000
@@ -47,8 +48,6 @@ let generalMockDataFiles = {
     }
 };
 
-let mockDir = __dirname;
-
 function createUserAndAirportData() {
     _.forEach(generalMockDataFiles, function(info, file) {
         var command = "mongoimport " + "--host=" + config.host + " --port=" + config.port;
@@ -74,10 +73,34 @@ function createMockFlightDataForRange(startDate, endDate) {
 		throw new Error('Start date and end date are required and must be date objects');
 	}
 
-    let flightsTemplate = fs.readFileSync('flights.json');
-    // Read file
-    // Iterate over date range...
+    console.log(startDate.toISOString());
 
+    startDate = moment(startDate).startOf('day');
+    endDate = moment(endDate).startOf('day');
+
+    console.log(startDate.format());
+
+    const flightsTemplate = fs.readFileSync(__dirname + '/flightData.json');
+    const flightsData = JSON.parse(flightsTemplate);
+
+    while (startDate <= endDate) {
+        var currDate = moment(startDate);
+
+        // Iterate over all origins
+            // Iterate over all flights for origin
+                // Change timezone without changing day
+                // var departureTime = currDate.tz('Some/Timezone', true);
+                // var departureTime.set({
+                //    'hour': flight.departure.hour,
+                //    'minute': flight.departure.minute
+                // });
+                // var arrivalTime = departureTime.clone();
+                // arrivalTime.set('minute': arrivalTime.get('minute') + flight.departureInMinutes);
+
+
+        // Increment start date
+        startDate.date(startDate.get('date') + 1);
+    }
 
     console.log('Done!');
 }
