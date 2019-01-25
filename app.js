@@ -15,45 +15,26 @@ module.exports = app; // for testing
 let appRoot = __dirname;
 global.appRoot = appRoot;
 let config = {
-  appRoot: appRoot,     // required config
-  // jsonEditor: false
+    appRoot: appRoot,     // required config
+    // jsonEditor: false
 };
 
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+    if (err) { throw err; }
 
-  // install middleware
-  app.use(SwaggerUI(swaggerExpress.runner.swagger));
-  swaggerExpress.register(app);
+    // install middleware
+    app.use(SwaggerUI(swaggerExpress.runner.swagger));
+    swaggerExpress.register(app);
 
-  app.listen(port);
+    app.listen(port);
 
-  console.log("App listening on ", port);
+    console.log("App listening on ", port);
 
-  // if (swaggerExpress.runner.swagger.paths['/hello']) {
-  //   console.log('Listening on', port, '(Try: curl http://127.0.0.1:' + port + '/hello?name=Scott)');
-  // }
+    // if (swaggerExpress.runner.swagger.paths['/hello']) {
+    //   console.log('Listening on', port, '(Try: curl http://127.0.0.1:' + port + '/hello?name=Scott)');
+    // }
 });
-
-start().catch(function(err) {
-    console.log("Something went wrong... ", err);
-});
-
-function start() {
-    var promises = [];
-
-    // Do all async setup here, example:
-    // let someAsyncCall = something();
-    // promises.push(someAsyncCall);
-
-    promises.push(mongoHelper.connectToDb());
-
-    return Promise.all(promises).then(function(){
-        console.log("\n\nSetup complete!");
-    });
-}
-
 
 // ~~~~~ ROUTING ~~~~~
 app.get('/', function(req, res) {
