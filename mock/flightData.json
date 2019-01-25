@@ -110,7 +110,7 @@
                 "durationInMinutes": 940
             }
         ],
-        "priceVariance": "0.42"
+        "volatility": "0.988"
     },
     "LAX": {
         "flights": [
@@ -1279,7 +1279,7 @@
                 "durationInMinutes": 185
             }
         ],
-        "priceVariance": "0.08"
+        "volatility": "1.033"
     },
     "PHL": {
         "flights": [
@@ -1872,7 +1872,7 @@
                 "durationInMinutes": 430
             }
         ],
-        "priceVariance": "0.04"
+        "volatility": "0.931"
     },
     "DFW": {
         "flights": [
@@ -3197,7 +3197,7 @@
                 "durationInMinutes": 140
             }
         ],
-        "priceVariance": "0.37"
+        "volatility": "1.055"
     },
     "ORD": {
         "flights": [
@@ -4522,7 +4522,7 @@
                 "durationInMinutes": 465
             }
         ],
-        "priceVariance": "0.71"
+        "volatility": "0.970"
     },
     "MIA": {
         "flights": [
@@ -5355,7 +5355,7 @@
                 "durationInMinutes": 175
             }
         ],
-        "priceVariance": "0.17"
+        "volatility": "0.997"
     },
     "JFK": {
         "flights": [
@@ -5900,7 +5900,7 @@
                 "durationInMinutes": 415
             }
         ],
-        "priceVariance": "0.28"
+        "volatility": "1.050"
     },
     "LHR": {
         "flights": [
@@ -6241,6 +6241,6 @@
                 "durationInMinutes": 495
             }
         ],
-        "priceVariance": "0.31"
+        "volatility": "0.983"
     }
 }
