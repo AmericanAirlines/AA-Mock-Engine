@@ -37,7 +37,7 @@ function bulkUpsert(collectionName, records, upsertKey) {
         return;
     }
 
-    collection.bulkWrite(operations, (err, result) => {
+    collection.bulkWrite(operations, { ordered: false }, (err, result) => {
         if (err) {
             console.error(err);
             // err.writeErrors.forEach((error) => {

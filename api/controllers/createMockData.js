@@ -8,8 +8,8 @@ module.exports = {
 
 function createMockData(req, res) {
     console.log("Adding mock data to MongoDB");
-    let startDateString = req.query.startDate;
-    let endDateString = req.query.endDate;
+    let startDateString = req.body.startDate;
+    let endDateString = req.body.endDate;
 
     var dates;
 
