@@ -6,8 +6,9 @@ const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mong
 var _db;
 
 module.exports = {
-    connectToDb: connectToDb,
-    getDb: getDb
+    connectToDb,
+    getDb,
+    bulkUpsert
 };
 
 function setup() {
@@ -50,6 +51,33 @@ function setup() {
     promises.push(reservationsPromise);
 
     return Promise.all(promises);
+}
+
+function bulkUpsert(collectionName, records, upsertKey) {
+    const collection = _db.collection(collectionName);
+
+    const operations = [];
+    records.forEach((record) => {
+        operations.push({
+            updateOne: {
+                filter: { [upsertKey]: record[upsertKey] },
+                update: { $set: record },
+                upsert: true,
+            }
+        });
+    });
+
+    if (operations.length === 0) {
+        return;
+    }
+
+    collection.bulkWrite(operations, { ordered: false }, (err, result) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log(result)
+    });
 }
 
 function connectToDb(callback) {
