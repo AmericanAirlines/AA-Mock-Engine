@@ -15,7 +15,8 @@ module.exports = app; // for testing
 let appRoot = __dirname;
 global.appRoot = appRoot;
 let config = {
-  appRoot: appRoot     // required config
+  appRoot: appRoot,     // required config
+  // jsonEditor: false
 };
 
 

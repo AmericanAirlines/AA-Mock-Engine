@@ -18,14 +18,14 @@ function user(req, res) {
     try {
         users.findOne({"email": email}, function(err, record) {
             if (err || record == null) {
-                res.status(400).json({"error": "User could not be found"});
+                res.status(404).json({"error": "User could not be found"});
                 console.log(err);
                 return;
             };
             res.json(record);
         });
     } catch(err) {
-        res.status(400).json({"error": "Something went wrong looking for user"});
+        res.status(500).json({"error": "Something went wrong looking for user"});
     }
 };
 

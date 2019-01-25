@@ -39,7 +39,4 @@ To add new endpoints or modify existing ones, use Swagger Editor (run `swagger p
 
 
 ## Contributing
-If you find a bug or see something you'd like to enhance, just open a PR or issue against this repo and we'll get to it as soon as we can!
-
-Remaining Development Tasks:
-- [ ] Create new endpoint to return MongoDB URI for connecting Mongo client remotely
+Find a bug? Have a feature you'd like to request? See our [Contributing Guidelines](.github/CONTRIBUTING.md) to get started.

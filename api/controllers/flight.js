@@ -2,6 +2,10 @@
 const _                 = require('lodash');
 const mongoHelper       = require('../helpers/mongoHelper');
 const mongo             = require('mongodb');
+const moment            = require('moment-timezone');
+
+// REMOVE
+const fs = require('fs');
 
 module.exports = {
     flight: flight,
@@ -10,23 +14,6 @@ module.exports = {
     retrieveFlights: retrieveFlights
 };
 
-
-function user(req, res) {
-    var email = _.toLower(req.swagger.params.email.value);
-    let users = mongoHelper.getDb().collection("user");
-    try {
-        users.findOne({email: email}, function(err, record) {
-            if (err || record == null) {
-                res.status(400).json({"error": "User could not be found"});
-                console.log(err);
-                return;
-            };
-            res.json(record);
-        });
-    } catch(err) {
-        res.status(400).json({"error": "Something went wrong looking for user"});
-    }
-};
 
 function flight(req, res) {
     let dateString = _.get(req, "swagger.params.date.value");
@@ -87,6 +74,7 @@ function flights(req, res) {
         var cursor = flights.find(queryParams).sort({ "departureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
+                console.error(err)
                 res.status(400).json({"error": "Flights could not be found"});
                 return;
             }

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"App,Mongo\" -c \"black.bold.bgCyan,gray\" \"nodemon -w ./api app.js\" \"mongod --dbpath=./data\"",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"App,Mongo\" -c \"black.bold.bgCyan,gray.dim\" \"nodemon app.js\" \"mongod --dbpath=./data\"",
     "mock": "node -e 'require(\"./mock/populateDb.js\").startImport()'"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "email-validator": "^1.2.3",
     "express": "^4.16.3",
     "lodash": "^4.17.11",
+    "moment-timezone": "^0.5.23",
     "mongodb": "^2.2.36",
     "randomstring": "^1.1.5",
     "swagger": "^0.7.5",
@@ -41,6 +42,9 @@
     "supertest": "^1.0.0"
   },
   "nodemonConfig": {
-    "verbose": false
+    "verbose": false,
+    "ignore": [
+      "data/*"
+    ]
   }
 }
