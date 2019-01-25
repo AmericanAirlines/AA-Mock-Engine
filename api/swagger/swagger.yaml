@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
+  version: "1.1.0"
   title: AA-Mock-Engine
 # basePath prefixes all resource paths
 basePath: /
