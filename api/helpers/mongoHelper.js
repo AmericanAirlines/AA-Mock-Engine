@@ -1,72 +1,81 @@
-require("dotenv").config();
-const MongoDB        = require('mongodb');
-const MongoClient    = MongoDB.MongoClient;
-const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/aa-mock-engine";
+require('dotenv').config();
+const MongoDB = require('mongodb');
+const MongoClient = MongoDB.MongoClient;
+const dbPath = process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://localhost:27017/aa-mock-engine';
 
-var _db;
+let _db;
 
-module.exports = {
-    connectToDb: connectToDb,
-    getDb: getDb
-};
+MongoClient.connect(
+    dbPath,
+    {
+        poolSize: 10,
+    },
+    function(err, dbConnection) {
+        _db = dbConnection;
+    }
+);
 
-function setup() {
-    // Perform any DB setup functions here
-    let promises = [];
-    let userPromise = new Promise(function(resolve, reject) {
-        _db.collection("user").createIndex({"email": 1}, {"unique": true}, function(err, response) {
-            if (err) {
-                reject();
-                console.log(err);
-                return;
-            }
-            resolve();
+const bulkUpsert = async (collectionName, records) => {
+    // TODO: Fix this to make upsert key more generic
+    //    Right now the departure time is hardcoded
+    const collection = _db.collection(collectionName);
+
+    const operations = [];
+    records.forEach((record) => {
+        operations.push({
+            updateOne: {
+                filter: {
+                    flightNumber: record.flightNumber,
+                    scheduledDepartureTime: record.scheduledDepartureTime,
+                },
+                update: { $set: record },
+                upsert: true,
+            },
         });
     });
-    promises.push(userPromise);
 
-    let flightsPromise = new Promise(function(resolve, reject) {
-        _db.collection("flight").createIndex({"flightNumber": 1, "departureTime": 1}, {"unique": true}, function(err, response) {
-            if (err) {
-                reject();
-                console.log(err);
-                return;
-            }
-            resolve();
-        });
-    });
-    promises.push(flightsPromise);
+    if (operations.length === 0) {
+        return;
+    }
 
-    let reservationsPromise = new Promise(function(resolve, reject) {
-        _db.collection("reservation").createIndex({"recordLocator": 1}, {"unique": true}, function(err, response) {
-            if (err) {
-                reject();
-                console.log(err);
-                return;
-            }
-            resolve();
-        });
-    });
-    promises.push(reservationsPromise);
+    for (let i = 0; i < operations.length; i += 10000) {
+        const chunk = operations.slice(i, i + 10000);
 
-    return Promise.all(promises);
-}
+        try {
+            await new Promise((resolve, reject) => {
+                collection.bulkWrite(chunk, { ordered: false }, (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-function connectToDb(callback) {
-    console.log("Connecting to MongoDB @ ", dbPath);
-    let dbPromise = new Promise(function(resolve, reject) {
-        MongoClient.connect(dbPath, function(err, dbConnection) {
-            if (err) reject(err);
-            _db = dbConnection;
-            console.log("Connected to DB");
-            setup().then(function(){
-                resolve();
+                    return resolve(result);
+                });
             });
-        });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    console.time('Upsert');
+
+    collection.bulkWrite(operations, { ordered: false }, (err, result) => {
+        if (err) {
+            console.error(err);
+            // err.writeErrors.forEach((error) => {
+            //
+            // });
+            return;
+        }
+        console.log('Records modified: ' + result.modifiedCount);
+        console.timeEnd('Upsert');
     });
-    return dbPromise;
-}
+};
 
 function getDb() {
     return _db;
 }
+
+module.exports = {
+    getDb,
+    bulkUpsert,
+};

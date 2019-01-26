@@ -2,6 +2,10 @@
 const _                 = require('lodash');
 const mongoHelper       = require('../helpers/mongoHelper');
 const mongo             = require('mongodb');
+const moment            = require('moment-timezone');
+
+// REMOVE
+const fs = require('fs');
 
 module.exports = {
     flight: flight,
@@ -10,23 +14,6 @@ module.exports = {
     retrieveFlights: retrieveFlights
 };
 
-
-function user(req, res) {
-    var email = _.toLower(req.swagger.params.email.value);
-    let users = mongoHelper.getDb().collection("user");
-    try {
-        users.findOne({email: email}, function(err, record) {
-            if (err || record == null) {
-                res.status(400).json({"error": "User could not be found"});
-                console.log(err);
-                return;
-            };
-            res.json(record);
-        });
-    } catch(err) {
-        res.status(400).json({"error": "Something went wrong looking for user"});
-    }
-};
 
 function flight(req, res) {
     let dateString = _.get(req, "swagger.params.date.value");
@@ -37,7 +24,7 @@ function flight(req, res) {
     }
 
     let queryParams = {
-        departureTime: getTodayRange(dateString),
+        scheduledDepartureTime: getQueryForDate(dateString),
         flightNumber: flightNumber
     };
 
@@ -68,7 +55,7 @@ function flights(req, res) {
         return;
     }
 
-    queryParams.departureTime = getTodayRange(dateString);
+    queryParams.scheduledDepartureTime = getQueryForDate(dateString);
 
     let origin = _.get(req, "swagger.params.origin.value");
     let destination = _.get(req, "swagger.params.destination.value")
@@ -84,9 +71,10 @@ function flights(req, res) {
     try {
         console.log(queryParams)
         let flights = mongoHelper.getDb().collection("flight");
-        var cursor = flights.find(queryParams).sort({ "departureTime" : 1 });
+        var cursor = flights.find(queryParams).sort({ "scheduledDepartureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
+                console.error(err)
                 res.status(400).json({"error": "Flights could not be found"});
                 return;
             }
@@ -111,7 +99,7 @@ function retrieveFlights(flightIds) {
         };
 
         let flights = mongoHelper.getDb().collection("flight");
-        var cursor = flights.find(query).sort({ "departureTime" : 1 });
+        var cursor = flights.find(query).sort({ "scheduledDepartureTime" : 1 });
         cursor.toArray(function(err, records) {
             if (err) {
                 reject(err);
@@ -122,6 +110,10 @@ function retrieveFlights(flightIds) {
     });
 }
 
+function getQueryForDate(datestring) {
+    let date = moment.utc(datestring).format('YYYY-MM-DD');
+    return { '$regex': date + '.*'};
+}
 
 function getTodayRange(dateString) {
     // This function is timezone-specific,
