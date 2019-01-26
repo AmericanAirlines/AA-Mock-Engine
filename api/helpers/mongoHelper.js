@@ -38,6 +38,7 @@ const bulkUpsert = async (collectionName, records) => {
         return;
     }
 
+    console.time('Upsert');
     for (let i = 0; i < operations.length; i += 10000) {
         const chunk = operations.slice(i, i + 10000);
 
@@ -55,20 +56,9 @@ const bulkUpsert = async (collectionName, records) => {
             console.error(err);
         }
     }
-
-    console.time('Upsert');
-
-    collection.bulkWrite(operations, { ordered: false }, (err, result) => {
-        if (err) {
-            console.error(err);
-            // err.writeErrors.forEach((error) => {
-            //
-            // });
-            return;
-        }
-        console.log('Records modified: ' + result.modifiedCount);
-        console.timeEnd('Upsert');
-    });
+    
+    console.log('Completed mock data import');
+    console.timeEnd('Upsert');
 };
 
 function getDb() {

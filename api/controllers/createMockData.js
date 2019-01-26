@@ -25,5 +25,5 @@ function createMockData(req, res) {
     mockDataGenerator.createMockFlightDataForRange(dates.start, dates.end)
 
     // TODO: Investigate a more appropriate way of handling errors during import
-    res.json("Mock data import started. Please check the logs for more information.");
+    res.json("Mock data import started. Please read the project README for more information on how to view logs for this process.");
 }

@@ -4,16 +4,12 @@ const mongoHelper       = require('../helpers/mongoHelper');
 const mongo             = require('mongodb');
 const moment            = require('moment-timezone');
 
-// REMOVE
-const fs = require('fs');
-
 module.exports = {
     flight: flight,
     flights: flights,
     setFlightStatus: setFlightStatus,
     retrieveFlights: retrieveFlights
 };
-
 
 function flight(req, res) {
     let dateString = _.get(req, "swagger.params.date.value");
