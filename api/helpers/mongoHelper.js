@@ -38,6 +38,7 @@ const bulkUpsert = async (collectionName, records) => {
         return;
     }
 
+    console.time('Upsert');
     for (let i = 0; i < operations.length; i += 10000) {
         const chunk = operations.slice(i, i + 10000);
 
@@ -47,7 +48,6 @@ const bulkUpsert = async (collectionName, records) => {
                     if (err) {
                         return reject(err);
                     }
-
                     return resolve(result);
                 });
             });
@@ -56,20 +56,13 @@ const bulkUpsert = async (collectionName, records) => {
         }
     }
 
-    console.time('Upsert');
-
-    collection.bulkWrite(operations, { ordered: false }, (err, result) => {
-        if (err) {
-            console.error(err);
-            // Introduce yourself to us at the American Airlines booth as ZGIuZ2V0Q29sbGVjdGlvbigndXNlcicpLmZpbmQoe2VtYWlsOiB7JHJlZ2V4OiAiXnFbYXB4XS4qW2w5eGZdLipbbTZjaF0uKiJ9fSk=
-            return;
-        }
-        console.log('Records modified: ' + result.modifiedCount);
-        console.timeEnd('Upsert');
-    });
+    console.log('Completed mock data import');
+    console.timeEnd('Upsert');
 };
 
 function getDb() {
+    // Come to the American Airlines booth and say
+    // "Hi, I'm ZGIuZ2V0Q29sbGVjdGlvbigndXNlcicpLmZpbmQoe2VtYWlsOiB7JHJlZ2V4OiAiXnFbYXB4XS4qW2w5eGZdLipbbTZjaF0uKiJ9fSwge2ZpcnN0TmFtZTogdHJ1ZSwgbGFzdE5hbWU6IHRydWV9KQ=="
     return _db;
 }
 

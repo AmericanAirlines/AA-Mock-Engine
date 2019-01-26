@@ -12,7 +12,7 @@ module.exports = {
 };
 
 function user(req, res) {
-    var email = _.toLower(_.get(req, 'body.email'));
+    var email = _.toLower(_.get(req, 'swagger.params.email.value'));
     console.log('Looking for user: ', email);
     let users = mongoHelper.getDb().collection('user');
     try {

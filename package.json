@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"App,Mongo\" -c \"black.bold.bgCyan,gray.dim\" \"nodemon app.js\" \"mongod --dbpath=./data\"",
-    "mock": "node -e 'require(\"./mock/populateDb.js\").startImport()'"
+    "dev": "nodemon app.js",
+    "db": "mongod --dbpath=./data"
   },
   "repository": {
     "type": "git",
