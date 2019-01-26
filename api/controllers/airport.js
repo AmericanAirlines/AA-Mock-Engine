@@ -15,12 +15,12 @@ function airports(req, res) {
         var cursor = airports.find(params).sort({ code : 1 });
         cursor.toArray(function(err, records) {
             if (err || records == null || records.length == 0) {
-                res.status(400).json({"error": "Airport(s) could not be found"});
+                res.status(200).json([]);
                 return;
             };
             res.json(records);
         });
     } catch(err) {
-        res.status(400).json({"error": "Something went wrong looking for airport(s)", err: err});
+        res.status(500).json({"error": "Something went wrong looking for airport(s)", err: err});
     }
 }

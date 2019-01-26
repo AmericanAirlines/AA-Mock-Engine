@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
+  version: "1.1.0"
   title: AA-Mock-Engine
 # basePath prefixes all resource paths
 basePath: /
@@ -18,16 +18,37 @@ consumes:
 produces:
   - application/json
 paths:
-  /mock:
-    x-swagger-router-controller: mock
+  /createMockData:
+    x-swagger-router-controller: createMockData
     post:
-      description: Populates the DB with mock data (process may take up to 5 minutes)
+      description: Populates the DB with mock data. Defaults to today ±15 days, if one param is supplied, the other will be initialized with a difference of 30 days.
       tags:
         - Mock
-      operationId: mock
+      consumes:
+        - application/json
+      operationId: createMockData
+      parameters:
+        - in: body
+          name: Mock Data Range
+          description: A date range for which mock data should be created (YYYY-MM-DD)
+          schema:
+            type: object
+            properties:
+              startDate:
+                description: Start date of mock data (e.g., YYYY-MM-DD)
+                type: string
+                format: date
+              endDate:
+                description: End date of mock data (e.g., YYYY-MM-DD)
+                type: string
+                format: date
       responses:
         "200":
           description: Success
+          schema:
+            type: string
+        "400":
+          description: Malformed date values
           schema:
             type: string
         "500":
@@ -49,52 +70,54 @@ paths:
           type: string
       responses:
         "200":
-          description: User found
+          description: Success
           schema:
             $ref: "#/definitions/User"
-        "400":
-          description: User could not be found
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Error retrieving user
           schema:
             type: string
     post:
       description: Creates a user object with the specified data
       tags:
         - User
+      consumes:
+        - application/json
       operationId: createUser
       parameters:
-        - name: firstName
-          in: query
-          description: First name
-          required: true
-          type: string
-        - name: lastName
-          in: query
-          description: Last name
-          required: true
-          type: string
-        - name: email
-          in: query
-          description: Email address
-          required: true
-          type: string
-        - name: gender
-          in: query
-          description: Gender
-          required: true
-          type: string
-          enum: ["Male", "Female", "Other"]
-        - name: aadvantageNumber
-          in: query
-          description: AAdvantage number
-          required: false
-          type: string
+        - in: body
+          name: New User Object
+          description: The user object
+          schema:
+            type: object
+            properties:
+              firstName:
+                description: First name
+                type: string
+              lastName:
+                description: Last name
+                type: string
+              email:
+                description: Email address
+                type: string
+              gender:
+                description: Gender
+                type: string
+                enum: ["Male", "Female", "Other"]
+              aadvantageNumber:
+                description: AAdvantage number
+                type: string
       responses:
         "200":
           description: User created
           schema:
             $ref: "#/definitions/User"
-        "400":
-          description: User could not be created
+        "500":
+          description: Error creating user
           schema:
             type: string
   /reservation:
@@ -116,8 +139,12 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/Reservation"
+        "404":
+          description: Reservation not found
+          schema:
+            type: string
         "500":
-            description: Reservation not found
+            description: Error retrieving reservation
             schema:
               type: string
     post:
@@ -128,7 +155,7 @@ paths:
       parameters:
       - name: userId
         in: query
-        description: User ID
+        description: User ID (MongoDB _id)
         required: true
         type: string
       - name: flightIds
@@ -143,8 +170,8 @@ paths:
           description: Reservation created
           schema:
             $ref: "#/definitions/Reservation"
-        "400":
-          description: Reservation could not be created
+        "500":
+          description: Error creating reservation
           schema:
             type: string
   /flight:
@@ -172,8 +199,12 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/FlightSegment"
+        "404":
+          description: Flight not found
+          schema:
+            type: string
         "500":
-            description: Flight not found
+            description: Error retrieving flight
             schema:
               type: string
   /flights:
@@ -207,6 +238,10 @@ paths:
             type: array
             items:
               $ref: "#/definitions/FlightSegment"
+        "500":
+          description: Error retrieving flights
+          schema:
+            type: string
   /flightStatus:
     x-swagger-router-controller: flight
     post:
@@ -231,6 +266,14 @@ paths:
           description: Success
           schema:
             type: string
+        "404":
+          description: Flight not found
+          schema:
+            type: string
+        "500":
+          description: Error retrieving flight status
+          schema:
+            type: string
   /airports:
     x-swagger-router-controller: airport
     get:
@@ -251,6 +294,10 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Airport"
+        "500":
+          description: Error retrieving airports
+          schema:
+            type: string
   /docs:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -290,23 +337,25 @@ definitions:
           $ref: "#/definitions/FlightSegment"
   FlightSegment:
     properties:
+      cost:
+        type: number
       flightNumber:
         type: string
       originCode:
         type: string
-      originCity:
-        type: string
+      # originCity:
+      #   type: string
       destinationCode:
         type: string
-      destinationCity:
+      # destinationCity:
+      #   type: string
+      estimatedDepartureTime:
         type: string
-      estimatedDeparture:
+      scheduledDepartureTime:
         type: string
-      scheduledDeparture:
+      estimatedArrivalTime:
         type: string
-      estimatedArrival:
-        type: string
-      scheduledArrival:
+      scheduledArrivalTime:
         type: string
   Airport:
     required:

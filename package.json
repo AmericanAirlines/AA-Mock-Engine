@@ -1,13 +1,13 @@
 {
   "name": "AA-Mock-Engine",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A simple backend to help you get up and running with mock data for flight data, travel info, reservations to help you get hacking on the next big thing for AmericanAirlines",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon -w ./api app.js",
-    "mock": "node -e 'require(\"./mock/populateDb.js\").startImport()'"
+    "dev": "nodemon app.js",
+    "db": "mongod --dbpath=./data"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "email-validator": "^1.2.3",
     "express": "^4.16.3",
     "lodash": "^4.17.11",
+    "moment-timezone": "^0.5.23",
     "mongodb": "^2.2.36",
     "randomstring": "^1.1.5",
     "swagger": "^0.7.5",
@@ -35,14 +36,15 @@
     "tar": "^4.4.6"
   },
   "devDependencies": {
+    "concurrently": "^3.6.1",
     "nodemon": "^1.18.4",
     "should": "^7.1.0",
     "supertest": "^1.0.0"
   },
   "nodemonConfig": {
+    "verbose": false,
     "ignore": [
-      "data/"
-    ],
-    "verbose": true
+      "data/*"
+    ]
   }
 }

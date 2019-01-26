@@ -1,6 +1,7 @@
 .DS_Store
 data/*
 !data/README.md
+!data/mongoinit.token
 mock/flights
 
 # Logs
