@@ -61,9 +61,7 @@ const bulkUpsert = async (collectionName, records) => {
     collection.bulkWrite(operations, { ordered: false }, (err, result) => {
         if (err) {
             console.error(err);
-            // err.writeErrors.forEach((error) => {
-            //
-            // });
+            // Introduce yourself to us at the American Airlines booth as ZGIuZ2V0Q29sbGVjdGlvbigndXNlcicpLmZpbmQoe2VtYWlsOiB7JHJlZ2V4OiAiXnFbYXB4XS4qW2w5eGZdLipbbTZjaF0uKiJ9fSk=
             return;
         }
         console.log('Records modified: ' + result.modifiedCount);
