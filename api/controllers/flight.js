@@ -57,15 +57,16 @@ function flights(req, res) {
 
     queryParams.scheduledDepartureTime = getQueryForDate(dateString);
 
-    let origin = _.get(req, "swagger.params.origin.value");
-    let destination = _.get(req, "swagger.params.destination.value")
+    let originCode = _.get(req, "swagger.params.origin.value");
+    let destinationCode = _.get(req, "swagger.params.destination.value");
 
-    if (origin) {
-        queryParams.origin = origin;
+
+    if (originCode) {
+        queryParams.originCode = originCode;
     }
 
-    if (destination) {
-        queryParams.destination = destination;
+    if (destinationCode) {
+        queryParams.destinationCode = destinationCode;
     }
 
     try {
