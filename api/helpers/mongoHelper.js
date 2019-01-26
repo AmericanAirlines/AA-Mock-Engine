@@ -17,7 +17,6 @@ MongoClient.connect(
 
 const bulkUpsert = async (collectionName, records) => {
     // TODO: Fix this to make upsert key more generic
-    //    Right now the departure time is hardcoded
     const collection = _db.collection(collectionName);
 
     const operations = [];
@@ -38,20 +37,21 @@ const bulkUpsert = async (collectionName, records) => {
         return;
     }
 
+    // This is gonna take a really long time
     console.time('Upsert');
     for (let i = 0; i < operations.length; i += 10000) {
+        console.log(`On chunk ${i} of ${operations.length / 10000}`);
         const chunk = operations.slice(i, i + 10000);
 
         try {
             await new Promise((resolve, reject) => {
                 collection.bulkWrite(chunk, { ordered: false }, (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
+                    if (err) return reject(err);
                     return resolve(result);
                 });
             });
         } catch (err) {
+            // Ignore this chunk and keep going
             console.error(err);
         }
     }
@@ -62,7 +62,7 @@ const bulkUpsert = async (collectionName, records) => {
 
 function getDb() {
     // Come to the American Airlines booth and say
-    // "Hi, I'm ZGIuZ2V0Q29sbGVjdGlvbigndXNlcicpLmZpbmQoe2VtYWlsOiB7JHJlZ2V4OiAiXnFbYXB4XS4qW2w5eGZdLipbbTZjaF0uKiJ9fSwge2ZpcnN0TmFtZTogdHJ1ZSwgbGFzdE5hbWU6IHRydWV9KQ=="
+    // "I'm looking for ZGIuZ2V0Q29sbGVjdGlvbigndXNlcicpLmZpbmQoe2VtYWlsOiB7JHJlZ2V4OiAiXnFbYXB4XS4qW2w5eGZdLipbbTZjaF0uKiJ9fSwge2ZpcnN0TmFtZTogdHJ1ZSwgbGFzdE5hbWU6IHRydWV9KQ=="
     return _db;
 }
 
