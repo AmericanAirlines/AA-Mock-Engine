@@ -1,20 +1,21 @@
-require("dotenv").config();
-const MongoDB        = require('mongodb');
-const MongoClient    = MongoDB.MongoClient;
-const dbPath         = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost:27017/aa-mock-engine";
+require('dotenv').config();
+const MongoDB = require('mongodb');
+const MongoClient = MongoDB.MongoClient;
+const dbPath = process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://localhost:27017/aa-mock-engine';
 
 let _db;
 
-module.exports = {
-    getDb,
-    bulkUpsert
-};
+MongoClient.connect(
+    dbPath,
+    {
+        poolSize: 10,
+    },
+    function(err, dbConnection) {
+        _db = dbConnection;
+    }
+);
 
-MongoClient.connect(dbPath, function(err, dbConnection) {
-    _db = dbConnection;
-});
-
-function bulkUpsert(collectionName, records, upsertKey) {
+const bulkUpsert = async (collectionName, records) => {
     // TODO: Fix this to make upsert key more generic
     //    Right now the departure time is hardcoded
     const collection = _db.collection(collectionName);
@@ -24,18 +25,38 @@ function bulkUpsert(collectionName, records, upsertKey) {
         operations.push({
             updateOne: {
                 filter: {
-                    'flightNumber': record.flightNumber,
-                    'scheduledDepartureTime': record.scheduledDepartureTime
+                    flightNumber: record.flightNumber,
+                    scheduledDepartureTime: record.scheduledDepartureTime,
                 },
                 update: { $set: record },
                 upsert: true,
-            }
+            },
         });
     });
 
     if (operations.length === 0) {
         return;
     }
+
+    for (let i = 0; i < operations.length; i += 10000) {
+        const chunk = operations.slice(i, i + 10000);
+
+        try {
+            await new Promise((resolve, reject) => {
+                collection.bulkWrite(chunk, { ordered: false }, (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve(result);
+                });
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    console.time('Upsert');
 
     collection.bulkWrite(operations, { ordered: false }, (err, result) => {
         if (err) {
@@ -46,9 +67,15 @@ function bulkUpsert(collectionName, records, upsertKey) {
             return;
         }
         console.log('Records modified: ' + result.modifiedCount);
+        console.timeEnd('Upsert');
     });
-}
+};
 
 function getDb() {
     return _db;
 }
+
+module.exports = {
+    getDb,
+    bulkUpsert,
+};
