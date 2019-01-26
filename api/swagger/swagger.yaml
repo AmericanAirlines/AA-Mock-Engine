@@ -5,10 +5,10 @@ info:
 # basePath prefixes all resource paths
 basePath: /
 # Uncomment for local dev:
-host: localhost:3030
+# host: localhost:3030
 schemes:
   # Uncomment for local dev:
-  - http
+  # - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
