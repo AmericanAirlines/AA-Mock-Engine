@@ -85,34 +85,32 @@ paths:
       description: Creates a user object with the specified data
       tags:
         - User
+      consumes:
+        - application/json
       operationId: createUser
       parameters:
-        - name: firstName
-          in: query
-          description: First name
-          required: true
-          type: string
-        - name: lastName
-          in: query
-          description: Last name
-          required: true
-          type: string
-        - name: email
-          in: query
-          description: Email address
-          required: true
-          type: string
-        - name: gender
-          in: query
-          description: Gender
-          required: true
-          type: string
-          enum: ["Male", "Female", "Other"]
-        - name: aadvantageNumber
-          in: query
-          description: AAdvantage number
-          required: false
-          type: string
+        - in: body
+          name: New User Object
+          description: The user object
+          schema:
+            type: object
+            properties:
+              firstName:
+                description: First name
+                type: string
+              lastName:
+                description: Last name
+                type: string
+              email:
+                description: Email address
+                type: string
+              gender:
+                description: Gender
+                type: string
+                enum: ["Male", "Female", "Other"]
+              aadvantageNumber:
+                description: AAdvantage number
+                type: string
       responses:
         "200":
           description: User created

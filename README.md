@@ -46,3 +46,5 @@ To run the app in dev, run `npm run dev` from one shell tab and `npm run db` in 
 
 ## Contributing
 Find a bug? Have a feature you'd like to request? See our [Contributing Guidelines](.github/CONTRIBUTING.md) to get started.
+
+[Huh?](./data/db.init.token)
