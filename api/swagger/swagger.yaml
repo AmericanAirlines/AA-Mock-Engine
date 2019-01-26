@@ -30,16 +30,16 @@ paths:
       parameters:
         - in: body
           name: Mock Data Range
-          description: A date range for which mock data should be created
+          description: A date range for which mock data should be created (YYYY-MM-DD)
           schema:
             type: object
             properties:
               startDate:
-                description: Start date of mock data (e.g., 1/1/2018)
+                description: Start date of mock data (e.g., YYYY-MM-DD)
                 type: string
                 format: date
               endDate:
-                description: End date of mock data (e.g., 2/1/2018)
+                description: End date of mock data (e.g., YYYY-MM-DD)
                 type: string
                 format: date
       responses:
@@ -157,7 +157,7 @@ paths:
       parameters:
       - name: userId
         in: query
-        description: User ID
+        description: User ID (MongoDB _id)
         required: true
         type: string
       - name: flightIds
